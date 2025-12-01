@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "title": "⚽ 해외축구 보기",
+    "category": "Football",
+    "description": [
+      "프리미어 리그를 좋아하며 뉴캐슬 유나이티드를 응원합니다.",
+      "프리미어 리그의 역동적인 경기와 전술을 관심 있게 지켜봅니다.",
+      "축구를 통해 팀워크와 전략적인 사고를 배웁니다."
+    ],
+    "tags": ["Premier League", "Newcastle United", "Football"],
+    "visual": "soccer"
+  },
+  {
+    "id": 2,
+    "title": "🎮 게임",
+    "category": "Gaming",
+    "description": [
+      "롤(League of Legends)과 같은 게임을 즐깁니다.",
+      "FPS 게임을 플레이하며 반사신경과 상황 판단력을 기르고,",
+      "전략 게임을 통해 문제 해결 능력과 전략적 사고를 개발합니다."
+    ],
+    "tags": ["FPS", "MOBA", "Strategy"],
+    "visual": "game"
+  }
+]
+
+
+

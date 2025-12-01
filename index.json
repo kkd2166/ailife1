@@ -1,0 +1,15 @@
+{
+  "hero": {
+    "badge": "신입 개발자 지망",
+    "titleLine": "안녕하세요 <span class=\"highlight\">김현호</span>입니다.",
+    "description": [
+      "한국성서대학교 25학번 김현호입니다.",
+      "매일 새로운 것을 배우며 성장하고 있습니다.",
+      "열정과 노력으로 팀과 함께 성장하는 개발자가 되고 싶습니다."
+    ],
+    "ctaText": "관심사 보기",
+    "ctaHref": "projects.html"
+  }
+}
+
+

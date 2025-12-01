@@ -97,12 +97,239 @@ const projectObserver = new IntersectionObserver((entries) => {
 }, projectObserverOptions);
 
 // Initialize project cards with animations
-document.querySelectorAll('.project-card').forEach((card, index) => {
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(50px) scale(0.95)';
-    card.style.transition = `opacity 0.8s ease ${index * 0.2}s, transform 0.8s ease ${index * 0.2}s`;
-    projectObserver.observe(card);
-});
+function initProjectCardsAnimation() {
+    const cards = document.querySelectorAll('.project-card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(50px) scale(0.95)';
+        card.style.transition = `opacity 0.8s ease ${index * 0.2}s, transform 0.8s ease ${index * 0.2}s`;
+        projectObserver.observe(card);
+    });
+}
+
+// Load projects/interests from JSON and render
+function loadProjectsFromJSON() {
+    const projectsGrid = document.getElementById('projectsGrid');
+
+    // 다른 페이지에는 이 요소가 없을 수 있으므로, 없으면 바로 리턴
+    if (!projectsGrid) {
+        initProjectCardsAnimation();
+        return;
+    }
+
+    fetch('projects.json')
+        .then(response => response.json())
+        .then(projects => {
+            projectsGrid.innerHTML = '';
+
+            projects.forEach((project) => {
+                const card = document.createElement('div');
+                card.className = 'project-card interest-card';
+
+                let visualHtml = '';
+                if (project.visual === 'soccer') {
+                    visualHtml = `
+                        <div class="interest-visual soccer-visual">
+                            <div class="soccer-field">
+                                <div class="field-lines">
+                                    <div class="center-circle"></div>
+                                    <div class="penalty-box left"></div>
+                                    <div class="penalty-box right"></div>
+                                    <div class="center-line"></div>
+                                </div>
+                                <div class="soccer-ball"></div>
+                            </div>
+                        </div>
+                    `;
+                } else if (project.visual === 'game') {
+                    visualHtml = `
+                        <div class="interest-visual game-visual">
+                            <div class="game-screen lol-style">
+                                <div class="lol-minimap"></div>
+                                <div class="lol-skills">
+                                    <div class="lol-skill"></div>
+                                    <div class="lol-skill"></div>
+                                    <div class="lol-skill"></div>
+                                    <div class="lol-skill"></div>
+                                </div>
+                                <div class="lol-champion"></div>
+                                <div class="lol-healthbar"></div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                const descriptionHtml = Array.isArray(project.description)
+                    ? project.description.join('<br>')
+                    : project.description;
+
+                const tagsHtml = Array.isArray(project.tags)
+                    ? project.tags.map(tag => `<span class="tech-tag">${tag}</span>`).join('')
+                    : '';
+
+                card.innerHTML = `
+                    <div class="project-image">
+                        ${visualHtml}
+                        <div class="project-overlay">
+                            <span class="project-category">${project.category}</span>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">${project.title}</h3>
+                        <p class="project-description">
+                            ${descriptionHtml}
+                        </p>
+                        <div class="project-tech">
+                            ${tagsHtml}
+                        </div>
+                    </div>
+                `;
+
+                projectsGrid.appendChild(card);
+            });
+
+            // JSON으로부터 생성된 카드들에 애니메이션 적용
+            initProjectCardsAnimation();
+        })
+        .catch(() => {
+            // JSON 로드에 실패하면 기존 카드(있다면)에만 애니메이션 적용
+            initProjectCardsAnimation();
+        });
+}
+
+// 페이지 로드 시 JSON 기반 프로젝트 로딩 시도
+document.addEventListener('DOMContentLoaded', loadProjectsFromJSON);
+
+// Load index (home) hero content from JSON
+function loadIndexFromJSON() {
+    const heroBadge = document.getElementById('heroBadge');
+    const heroTitleLine = document.getElementById('heroTitleLine');
+    const heroDescription = document.getElementById('heroDescription');
+    const heroCta = document.getElementById('heroCta');
+
+    // index 페이지가 아닐 수 있으니 요소가 없으면 리턴
+    if (!heroBadge || !heroTitleLine || !heroDescription || !heroCta) {
+        return;
+    }
+
+    fetch('index.json')
+        .then(response => response.json())
+        .then(data => {
+            if (!data.hero) return;
+            const hero = data.hero;
+
+            if (hero.badge) {
+                heroBadge.textContent = hero.badge;
+            }
+            if (hero.titleLine) {
+                // titleLine에는 강조 span 등이 포함될 수 있어 HTML로 삽입
+                heroTitleLine.innerHTML = hero.titleLine;
+            }
+            if (Array.isArray(hero.description)) {
+                heroDescription.innerHTML = hero.description.join('<br>');
+            }
+            if (hero.ctaText) {
+                heroCta.textContent = hero.ctaText;
+            }
+            if (hero.ctaHref) {
+                heroCta.setAttribute('href', hero.ctaHref);
+            }
+        })
+        .catch(() => {
+            // JSON 로드 실패 시, 기존 정적 콘텐츠 유지
+        });
+}
+
+// 페이지 로드 시 index 콘텐츠도 JSON에서 로딩
+document.addEventListener('DOMContentLoaded', loadIndexFromJSON);
+
+// Load contact info from JSON and render
+function loadContactFromJSON() {
+    const contactTitle = document.getElementById('contactTitle');
+    const contactSubtitle = document.getElementById('contactSubtitle');
+    const contactInfo = document.getElementById('contactInfo');
+
+    // Contact 페이지가 아닐 수도 있으니 요소가 없으면 리턴
+    if (!contactInfo || !contactTitle || !contactSubtitle) {
+        return;
+    }
+
+    fetch('contact.json')
+        .then(response => response.json())
+        .then(data => {
+            // 제목/부제 갱신
+            if (data.title) {
+                contactTitle.textContent = data.title;
+            }
+            if (data.subtitle) {
+                contactSubtitle.textContent = data.subtitle;
+            }
+
+            // 정보 아이템 렌더링
+            contactInfo.innerHTML = '';
+
+            if (Array.isArray(data.items)) {
+                data.items.forEach(item => {
+                    const infoItem = document.createElement('div');
+                    infoItem.className = 'info-item';
+
+                    infoItem.innerHTML = `
+                        <div class="info-icon">${item.icon || ''}</div>
+                        <div class="info-content">
+                            <h4>${item.heading || ''}</h4>
+                            <p>${item.text || ''}</p>
+                        </div>
+                    `;
+
+                    contactInfo.appendChild(infoItem);
+                });
+            }
+        })
+        .catch(() => {
+            // JSON 로드 실패 시, 기존 정적인 HTML이 이미 없으므로 별도 처리 생략
+        });
+}
+
+// 페이지 로드 시 Contact 정보도 JSON에서 로딩
+document.addEventListener('DOMContentLoaded', loadContactFromJSON);
+
+// Load career page content from JSON and render
+function loadCareerFromJSON() {
+    const careerTitle = document.getElementById('careerTitle');
+    const careerSubtitle = document.getElementById('careerSubtitle');
+    const careerCardTitle = document.getElementById('careerCardTitle');
+    const careerDescription = document.getElementById('careerDescription');
+
+    // Career 페이지가 아닐 수 있으니 요소가 없으면 리턴
+    if (!careerTitle || !careerSubtitle || !careerCardTitle || !careerDescription) {
+        return;
+    }
+
+    fetch('career.json')
+        .then(response => response.json())
+        .then(data => {
+            if (data.title) {
+                careerTitle.textContent = data.title;
+            }
+            if (data.subtitle) {
+                careerSubtitle.textContent = data.subtitle;
+            }
+            if (data.cardTitle) {
+                careerCardTitle.textContent = data.cardTitle;
+            }
+            if (data.description) {
+                // description은 \n 을 포함한 하나의 문자열이므로 그대로 넣으면
+                // white-space: pre-line; 스타일에 의해 줄바꿈이 유지됨
+                careerDescription.textContent = data.description;
+            }
+        })
+        .catch(() => {
+            // JSON 로드 실패 시 기존 정적 텍스트 유지
+        });
+}
+
+// 페이지 로드 시 Career 콘텐츠도 JSON에서 로딩
+document.addEventListener('DOMContentLoaded', loadCareerFromJSON);
 
 // Form validation and submission
 const contactForm = document.getElementById('contactForm');
