@@ -1,0 +1,299 @@
+// Navigation functionality
+const hamburger = document.querySelector('.hamburger');
+const navMenu = document.querySelector('.nav-menu');
+const navLinks = document.querySelectorAll('.nav-link');
+
+// Set active nav link based on current page
+function setActiveNavLink() {
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        const linkHref = link.getAttribute('href');
+        const linkPage = linkHref.split('/').pop();
+        
+        // Check if current page matches link
+        if (linkPage === currentPage) {
+            link.classList.add('active');
+        } else if ((currentPage === '' || currentPage === 'index.html' || currentPage.endsWith('/')) && linkPage === 'index.html') {
+            link.classList.add('active');
+        }
+    });
+}
+
+// Initialize active nav link
+setActiveNavLink();
+
+// Toggle mobile menu
+hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    navMenu.classList.toggle('active');
+});
+
+// Close menu when clicking on a link
+navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+    });
+});
+
+// Smooth scroll for navigation links (only if they are anchors on the same page)
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        // Only prevent default if it's an anchor link on the same page
+        if (href !== '#' && document.querySelector(href)) {
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) {
+                const offsetTop = target.offsetTop - 80;
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        }
+    });
+});
+
+// Navbar scroll effect
+let lastScroll = 0;
+const navbar = document.querySelector('.navbar');
+
+window.addEventListener('scroll', () => {
+    const currentScroll = window.pageYOffset;
+    
+    if (currentScroll > 100) {
+        navbar.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+    } else {
+        navbar.style.boxShadow = '0 1px 2px 0 rgba(0, 0, 0, 0.05)';
+    }
+    
+    lastScroll = currentScroll;
+});
+
+// Intersection Observer for project card animations
+const projectObserverOptions = {
+    threshold: 0.2,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const projectObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+            const card = entry.target;
+            
+            // Animate card entrance
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0) scale(1)';
+            
+            // Add animated class to trigger content animations
+            card.classList.add('animated');
+            
+            // Unobserve after animation starts
+            projectObserver.unobserve(card);
+        }
+    });
+}, projectObserverOptions);
+
+// Initialize project cards with animations
+document.querySelectorAll('.project-card').forEach((card, index) => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(50px) scale(0.95)';
+    card.style.transition = `opacity 0.8s ease ${index * 0.2}s, transform 0.8s ease ${index * 0.2}s`;
+    projectObserver.observe(card);
+});
+
+// Form validation and submission
+const contactForm = document.getElementById('contactForm');
+const formMessage = document.getElementById('formMessage');
+
+// Validation functions
+function validateName(name) {
+    if (name.trim().length < 2) {
+        return '이름은 최소 2자 이상이어야 합니다.';
+    }
+    return '';
+}
+
+function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        return '올바른 이메일 형식을 입력해주세요.';
+    }
+    return '';
+}
+
+function validateSubject(subject) {
+    if (subject.trim().length < 3) {
+        return '제목은 최소 3자 이상이어야 합니다.';
+    }
+    return '';
+}
+
+function validateMessage(message) {
+    if (message.trim().length < 10) {
+        return '메시지는 최소 10자 이상이어야 합니다.';
+    }
+    return '';
+}
+
+// Real-time validation
+const formInputs = {
+    name: document.getElementById('name'),
+    email: document.getElementById('email'),
+    subject: document.getElementById('subject'),
+    message: document.getElementById('message')
+};
+
+Object.keys(formInputs).forEach(key => {
+    const input = formInputs[key];
+    const errorElement = input.parentElement.querySelector('.error-message');
+    
+    input.addEventListener('blur', () => {
+        let error = '';
+        
+        switch(key) {
+            case 'name':
+                error = validateName(input.value);
+                break;
+            case 'email':
+                error = validateEmail(input.value);
+                break;
+            case 'subject':
+                error = validateSubject(input.value);
+                break;
+            case 'message':
+                error = validateMessage(input.value);
+                break;
+        }
+        
+        errorElement.textContent = error;
+        if (error) {
+            input.style.borderColor = '#ef4444';
+        } else {
+            input.style.borderColor = '#10b981';
+        }
+    });
+    
+    input.addEventListener('input', () => {
+        if (errorElement.textContent) {
+            errorElement.textContent = '';
+            input.style.borderColor = '#e5e7eb';
+        }
+    });
+});
+
+// Form submission
+contactForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    // Clear previous messages
+    formMessage.className = 'form-message';
+    formMessage.textContent = '';
+    
+    // Get form values
+    const formData = {
+        name: formInputs.name.value.trim(),
+        email: formInputs.email.value.trim(),
+        subject: formInputs.subject.value.trim(),
+        message: formInputs.message.value.trim()
+    };
+    
+    // Validate all fields
+    const errors = {
+        name: validateName(formData.name),
+        email: validateEmail(formData.email),
+        subject: validateSubject(formData.subject),
+        message: validateMessage(formData.message)
+    };
+    
+    // Display errors
+    let hasErrors = false;
+    Object.keys(errors).forEach(key => {
+        const error = errors[key];
+        const input = formInputs[key];
+        const errorElement = input.parentElement.querySelector('.error-message');
+        
+        if (error) {
+            errorElement.textContent = error;
+            input.style.borderColor = '#ef4444';
+            hasErrors = true;
+        } else {
+            errorElement.textContent = '';
+            input.style.borderColor = '#e5e7eb';
+        }
+    });
+    
+    if (hasErrors) {
+        formMessage.className = 'form-message error';
+        formMessage.textContent = '모든 필드를 올바르게 입력해주세요.';
+        formMessage.style.display = 'block';
+        return;
+    }
+    
+    // Simulate form submission
+    const submitButton = contactForm.querySelector('.submit-button');
+    submitButton.textContent = '전송 중...';
+    submitButton.disabled = true;
+    
+    // Simulate API call
+    setTimeout(() => {
+        formMessage.className = 'form-message success';
+        formMessage.textContent = '메시지가 성공적으로 전송되었습니다! 곧 연락드리겠습니다.';
+        formMessage.style.display = 'block';
+        
+        // Reset form
+        contactForm.reset();
+        Object.values(formInputs).forEach(input => {
+            input.style.borderColor = '#e5e7eb';
+            input.parentElement.querySelector('.error-message').textContent = '';
+        });
+        
+        submitButton.textContent = '메시지 보내기';
+        submitButton.disabled = false;
+        
+        // Scroll to message
+        formMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        
+        // Hide message after 5 seconds
+        setTimeout(() => {
+            formMessage.style.display = 'none';
+        }, 5000);
+    }, 1500);
+});
+
+// Add parallax effect to hero shapes
+window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    const shapes = document.querySelectorAll('.floating-shape');
+    
+    shapes.forEach((shape, index) => {
+        const speed = 0.5 + (index * 0.1);
+        const yPos = -(scrolled * speed);
+        shape.style.transform = `translateY(${yPos}px) rotate(${scrolled * 0.1}deg)`;
+    });
+});
+
+// Add active state to navigation based on scroll position
+const sections = document.querySelectorAll('section[id]');
+
+window.addEventListener('scroll', () => {
+    let current = '';
+    
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop - 100;
+        const sectionHeight = section.clientHeight;
+        
+        if (window.pageYOffset >= sectionTop && window.pageYOffset < sectionTop + sectionHeight) {
+            current = section.getAttribute('id');
+        }
+    });
+    
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+            link.classList.add('active');
+        }
+    });
+});

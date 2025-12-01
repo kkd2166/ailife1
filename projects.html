@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interests | 포트폴리오</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 네비게이션 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="index.html" style="text-decoration: none;">
+                    <span class="logo-text">Portfolio</span>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="projects.html" class="nav-link">Interests</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 관심사 섹션 -->
+    <section class="projects" style="padding-top: 120px;">
+        <div class="container">
+            <h2 class="section-title">Interests</h2>
+            <p class="section-subtitle">낮엔 레벨업, 밤엔 킥오프. 🎮⚽️</p>
+            
+            <div class="projects-grid">
+                <!-- 관심사 1: 해외축구 -->
+                <div class="project-card interest-card" data-interest="1">
+                    <div class="project-image">
+                        <div class="interest-visual soccer-visual">
+                            <div class="soccer-field">
+                                <div class="field-lines">
+                                    <div class="center-circle"></div>
+                                    <div class="penalty-box left"></div>
+                                    <div class="penalty-box right"></div>
+                                    <div class="center-line"></div>
+                                </div>
+                                <div class="soccer-ball"></div>
+                            </div>
+                        </div>
+                        <div class="project-overlay">
+                            <span class="project-category">Football</span>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">⚽ 해외축구 보기</h3>
+                        <p class="project-description">
+                            프리미어 리그를 좋아하며 뉴캐슬 유나이티드를 응원합니다.<br>
+                            프리미어 리그의 역동적인 경기와 전술을 관심있게 지켜봅니다.<br>
+                            축구를 통해 팀워크와 전략적인 사고를 배웁니다.
+                        </p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Premier League</span>
+                            <span class="tech-tag">Newcastle United</span>
+                            <span class="tech-tag">Football</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 관심사 2: 게임 -->
+                <div class="project-card interest-card" data-interest="2">
+                    <div class="project-image">
+                        <div class="interest-visual game-visual">
+                            <div class="game-screen lol-style">
+                                <div class="lol-minimap"></div>
+                                <div class="lol-skills">
+                                    <div class="lol-skill"></div>
+                                    <div class="lol-skill"></div>
+                                    <div class="lol-skill"></div>
+                                    <div class="lol-skill"></div>
+                                </div>
+                                <div class="lol-champion"></div>
+                                <div class="lol-healthbar"></div>
+                            </div>
+                        </div>
+                        <div class="project-overlay">
+                            <span class="project-category">Gaming</span>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">🎮 게임</h3>
+                        <p class="project-description">
+                            롤(League of Legends)과 같은 게임을 즐깁니다.<br>
+                            FPS 게임을 플레이하며 반사신경과 상황 판단력을 기르고,<br>
+                            전략 게임을 통해 문제 해결 능력과 전략적 사고를 개발합니다.
+                        </p>
+                        <div class="project-tech">
+                            <span class="tech-tag">FPS</span>
+                            <span class="tech-tag">MOBA</span>
+                            <span class="tech-tag">Strategy</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Portfolio. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
